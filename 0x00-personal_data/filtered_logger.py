@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """This script will hide certain parts of a string"""
+import os
 import logging
+import mysql.connector
 from typing import List
 import re
 
@@ -49,3 +51,13 @@ def get_logger() -> logging.Logger:
     logger.addHandler(handler)
     logger.propagate = False
     return logger
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """This will access to db from environmental"""
+    connection = mysql.connector\
+                      .connect(host=os.getenv('PERSONAL_DATA_DB_HOST'),
+                               user=os.getenv('PERSONAL_DATA_DB_USERNAME'),
+                               password=os.getenv('PERSONAL_DATA_DB_PASSWORD'),
+                               database=os.getenv('PERSONAL_DATA_DB_NAME'))
+    return connection
