@@ -68,11 +68,12 @@ def main():
     message = ""
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("SELECT name, email, phone, ssn, password FROM users")
+    cursor.execute("SELECT * FROM users")
     for row in cursor:
         message = "name=" + row[0] + ";" + "email=" + row[1] + ";" +\
                   "phone=" + row[2] + ";" + "ssn=" + row[3] + ";" +\
-                  "password=" + row[4] + ";"
+                  "password=" + row[4] + ";" + "ip=" + row[5] + ";" +\
+                  "last_login=" + str(row[6]) + ";" + "user_agent" + row[7] + ";"
         logger = get_logger()
         log_record = logging.LogRecord('user_data', logging.INFO, None,
                                        None, message, None, None)
