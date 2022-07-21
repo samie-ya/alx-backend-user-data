@@ -14,9 +14,9 @@ def filter_datum(fields: List[str], redaction: str, message: str,
                  separator: str) -> str:
     """This funtion will return a hidden message"""
     for field in fields:
-        pattern = re.search(field + "=(.*)" + separator, message).group(1)
-        new_pattern = pattern.split(";")[0]
-        message = re.sub(new_pattern, redaction, message)
+        pattern = field + "=[^{}]*".format(separator)
+        # new_pattern = pattern.split(";")[0]
+        message = re.sub(pattern, field + '=' + redaction, message)
     return message
 
 
@@ -46,7 +46,7 @@ def get_logger() -> logging.Logger:
     logger = logging.Logger('user_data')
     logger.setLevel(logging.INFO)
     handler = logging.StreamHandler()
-    formatter = RedactingFormatter(PII_FIELDS)
+    formatter = RedactingFormatter(list(PII_FIELDS))
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.propagate = False
@@ -61,3 +61,25 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
                                password=os.getenv('PERSONAL_DATA_DB_PASSWORD'),
                                database=os.getenv('PERSONAL_DATA_DB_NAME'))
     return connection
+
+
+def main():
+    """This function will deal with the workings of mysql"""
+    message = ""
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT name, email, phone, ssn, ip FROM users")
+    for row in cursor:
+        message = "name=" + row[0] + ";" + "email=" + row[1] + ";" +\
+                  "phone=" + row[2] + ";" + "ssn=" + row[3] + ";" +\
+                  "ip=" + row[4] + ";"
+        logger = get_logger()
+        log_record = logging.LogRecord('user_data', logging.INFO, None,
+                                       None, message, None, None)
+        print(logger.handlers[0].formatter.format(log_record))
+    cursor.close()
+    db.close()
+
+
+if __name__ == "__main__":
+    main()
