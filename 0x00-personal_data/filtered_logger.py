@@ -15,7 +15,6 @@ def filter_datum(fields: List[str], redaction: str, message: str,
     """This funtion will return a hidden message"""
     for field in fields:
         pattern = field + "=[^{}]*".format(separator)
-        # new_pattern = pattern.split(";")[0]
         message = re.sub(pattern, field + '=' + redaction, message)
     return message
 
@@ -73,7 +72,8 @@ def main():
         message = "name=" + row[0] + ";" + "email=" + row[1] + ";" +\
                   "phone=" + row[2] + ";" + "ssn=" + row[3] + ";" +\
                   "password=" + row[4] + ";" + "ip=" + row[5] + ";" +\
-                  "last_login=" + str(row[6]) + ";" + "user_agent" + row[7] + ";"
+                  "last_login=" + str(row[6]) + ";" +\
+                  "user_agent" + row[7] + ";"
         logger = get_logger()
         log_record = logging.LogRecord('user_data', logging.INFO, None,
                                        None, message, None, None)
