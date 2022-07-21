@@ -7,7 +7,7 @@ from typing import List
 import re
 
 
-PII_FIELDS = ("name", "email", "phone", "ssn", "ip")
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
 def filter_datum(fields: List[str], redaction: str, message: str,
@@ -46,7 +46,7 @@ def get_logger() -> logging.Logger:
     logger = logging.Logger('user_data')
     logger.setLevel(logging.INFO)
     handler = logging.StreamHandler()
-    #formatter = RedactingFormatter(list(PII_FIELDS))
+    formatter = RedactingFormatter(PII_FIELDS)
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.propagate = False
@@ -68,11 +68,11 @@ def main():
     message = ""
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("SELECT name, email, phone, ssn, ip FROM users")
+    cursor.execute("SELECT name, email, phone, ssn, password FROM users")
     for row in cursor:
         message = "name=" + row[0] + ";" + "email=" + row[1] + ";" +\
                   "phone=" + row[2] + ";" + "ssn=" + row[3] + ";" +\
-                  "ip=" + row[4] + ";"
+                  "password=" + row[4] + ";"
         logger = get_logger()
         log_record = logging.LogRecord('user_data', logging.INFO, None,
                                        None, message, None, None)
