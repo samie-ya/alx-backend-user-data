@@ -13,24 +13,31 @@ class Auth():
         if (path is None) or (excluded_paths is None) or\
            (excluded_paths == []):
             return True
+
+        astrix = []
+        for paths in excluded_paths:
+            if paths[-1] == "*":
+                astrix.append(paths)
+
         if path[-1] == "/":
             if path in excluded_paths:
                 return False
             else:
+                for paths in astrix:
+                    length = len(paths) - 1
+                    if (paths[:-1] == path[:length]):
+                        return False
                 return True
         else:
             path += "/"
             if path in excluded_paths:
                 return False
             else:
+                for paths in astrix:
+                    length = len(paths) - 1
+                    if (paths[:-1] == path[:length]):
+                        return False
                 return True
-        for paths in excluded_paths:
-            if paths[-1] == "*":
-                length = len(paths) - 1
-                if path[:length] == paths[:-1]:
-                    return False
-                else:
-                    return True
 
     def authorization_header(self, request=None) -> str:
         """This function will authorize headers"""
