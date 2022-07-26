@@ -24,6 +24,13 @@ class Auth():
                 return False
             else:
                 return True
+        for paths in excluded_paths:
+            if paths[-1] == "*":
+                length = len(paths) - 1
+                if path[:length] == paths[:-1]:
+                    return False
+                else:
+                    return True
 
     def authorization_header(self, request=None) -> str:
         """This function will authorize headers"""
