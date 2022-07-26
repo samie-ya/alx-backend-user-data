@@ -61,7 +61,7 @@ class BasicAuth(Auth):
             return None
         if (user_pwd is None) or (type(user_pwd) != str):
             return None
-        users = User.search()
+        users = self.search()
         if len(users) != 0:
             for user in users:
                 if user.email == user_email:
