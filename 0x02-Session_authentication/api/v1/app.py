@@ -17,9 +17,6 @@ env = getenv('AUTH_TYPE')
 if env == "basic_auth":
     from api.v1.auth.basic_auth import BasicAuth
     auth = BasicAuth()
-if env == "session_auth":
-    from api.v1.auth.session_auth import SessionAuth
-    auth = SessionAuth()
 if env == "auth":
     from api.v1.auth.auth import Auth
     auth = Auth()
@@ -55,8 +52,7 @@ def before_request():
     if not auth.require_auth(request.path, excluded_path):
         pass
     else:
-        if (auth.authorization_header(request) is None) and\
-           (auth.session_cookie(request) is None):
+        if (auth.authorization_header(request) is None):
             abort(401)
         if auth.current_user(request) is None:
             abort(403)
