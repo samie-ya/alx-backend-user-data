@@ -29,3 +29,14 @@ def login():
             return jsonify({"error": "wrong password"}), 401
     except IndexError as e:
         return jsonify({"error": "no user found for this email"}), 404
+
+
+@app_views.route('/auth_session/logout', methods=['DELETE'],
+                 strict_slashes=False)
+def delete():
+    """This function will delete a user session when route is given"""
+    from api.v1.app import auth
+    if auth.destroy_session(request):
+        return jsonify({}), 200
+    else:
+        abort(404)
