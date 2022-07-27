@@ -53,10 +53,10 @@ class Auth():
         """This function will return None"""
         return None
 
-#    def session_cookie(self, request=None) -> str:
-#        """This function returns cookie value from request"""
-#        if request is None:
-#            return None
-#        cookie_name = getenv('SESSION_NAME')
-#        cookie_value = request.cookies.get(cookie_name)
-#        return cookie_value
+    def session_cookie(self, request=None) -> str:
+        """This function returns cookie value from request"""
+        if request is None:
+            return None
+        cookie_name = getenv('SESSION_NAME')
+        cookie_value = request.cookies.get(cookie_name)
+        return cookie_value
