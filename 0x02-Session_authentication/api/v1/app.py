@@ -20,6 +20,9 @@ if env == "basic_auth":
 if env == "session_auth":
     from api.v1.auth.session_auth import SessionAuth
     auth = SessionAuth()
+if env == "session_exp_auth":
+    from api.v1.auth.session_exp_auth import SessionExpAuth
+    auth = SessionExpAuth()
 if env == "auth":
     from api.v1.auth.auth import Auth
     auth = Auth()
