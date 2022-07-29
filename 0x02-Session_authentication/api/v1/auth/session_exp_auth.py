@@ -33,19 +33,18 @@ class SessionExpAuth(SessionAuth):
 
     def user_id_for_session_id(self, session_id=None) -> str:
         """This function will find a user_id from session_id"""
-        sess_dict = self.user_id_by_session_id[session_id]
-        session_time = sess_dict['created_at'] +\
-            timedelta(seconds=self.session_duration)
         if session_id is None:
-            return None
-        if session_time < datetime.now():
             return None
         if session_id not in self.user_id_by_session_id:
             return None
+        sess_dict = self.user_id_by_session_id[session_id]
         if ('created_at' not in sess_dict) and\
            (session_id in self.user_id_by_session_id):
             return None
-        if (self.session_duration <= 0) and\
-           (session_id in self.user_id_by_session_id):
+        session_time = sess_dict['created_at'] +\
+            timedelta(seconds=self.session_duration)
+        if session_time < datetime.now():
+            return None
+        if (self.session_duration <= 0):
             return sess_dict['user_id']
         return sess_dict['user_id']
