@@ -32,7 +32,7 @@ class SessionDBAuth(SessionExpAuth):
         try:
             user = ls[0]
             return user.user_id
-        except IndexError as e:
+        except Exception as e:
             return None
 
     def destroy_session(self, request=None):
