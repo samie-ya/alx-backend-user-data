@@ -33,7 +33,7 @@ class SessionDBAuth(SessionExpAuth):
             user = ls[0]
             return user.user_id
         except IndexError as e:
-            pass
+            return None
 
     def destroy_session(self, request=None):
         """This function will delete a session"""
