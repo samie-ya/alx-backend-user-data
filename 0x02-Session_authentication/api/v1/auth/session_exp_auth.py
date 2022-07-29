@@ -9,8 +9,6 @@ from os import getenv
 class SessionExpAuth(SessionAuth):
     """This class will be create the class SessionExpAuth"""
 
-    user_id_by_session_id = {}
-
     def __init__(self):
         """This function will initialte the class"""
         super(SessionExpAuth, self).__init__()
@@ -26,7 +24,7 @@ class SessionExpAuth(SessionAuth):
         session_dictionary = {}
         sess_id = super().create_session(user_id)
         if sess_id:
-            SessionExpAuth.user_id_by_session_id[sess_id] = session_dictionary
+            self.user_id_by_session_id[sess_id] = session_dictionary
             session_dictionary['user_id'] = user_id
             session_dictionary['created_at'] = datetime.now()
             return sess_id
@@ -35,19 +33,19 @@ class SessionExpAuth(SessionAuth):
 
     def user_id_for_session_id(self, session_id=None) -> str:
         """This function will find a user_id from session_id"""
-        sess_dict = SessionExpAuth.user_id_by_session_id[session_id]
+        sess_dict = self.user_id_by_session_id[session_id]
         session_time = sess_dict['created_at'] +\
             timedelta(seconds=self.session_duration)
         if session_id is None:
             return None
         if session_time < datetime.now():
             return None
-        if session_id not in SessionExpAuth.user_id_by_session_id:
+        if session_id not in self.user_id_by_session_id:
             return None
         if ('created_at' not in sess_dict) and\
-           (session_id in SessionExpAuth.user_id_by_session_id):
+           (session_id in self.user_id_by_session_id):
             return None
         if (self.session_duration <= 0) and\
-           (session_id in SessionExpAuth.user_id_by_session_id):
+           (session_id in self.user_id_by_session_id):
             return sess_dict['user_id']
         return sess_dict['user_id']
