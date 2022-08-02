@@ -2,6 +2,7 @@
 """This function will create a basic flask app"""
 
 from flask import Flask, jsonify, request, abort, make_response
+from flask import redirect
 from auth import Auth
 
 
@@ -39,6 +40,18 @@ def login():
         return resp
     else:
         abort(401)
+
+
+@app.route('/sessions', methods=['DELETE'])
+def delete():
+    """This route will delete a user"""
+    cookie_value = request.cookie.get('session_id')
+    user = AUTH.get_user_from_session_id(cookie_value)
+    if user:
+        AUTH.destroy_session(user.id)
+        redirect(url_for('basic'))
+    else:
+        abort(403)
 
 
 if __name__ == "__main__":
