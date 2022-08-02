@@ -45,7 +45,7 @@ def login():
 @app.route('/sessions', methods=['DELETE'])
 def logout():
     """This route will delete a user"""
-    cookie_value = request.cookie.get('session_id')
+    cookie_value = request.cookies.get('session_id')
     user = AUTH.get_user_from_session_id(cookie_value)
     if user:
         AUTH.destroy_session(user.id)
