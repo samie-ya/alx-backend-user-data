@@ -32,3 +32,13 @@ class Auth:
             session.add(new_user)
             session.commit()
             return new_user
+
+    def valid_login(self, email: str, password: str) -> bool:
+        """This function will validate a user"""
+        session = self._db._session
+        user = session.query(User).filter_by(email=email).first()
+        if user:
+            encrypt = password.encode('UTF-8')
+            if bcrypt.checkpw(encrypt, user.password):
+                return True
+            return False
