@@ -67,7 +67,9 @@ class Auth:
         """This function will retrieve a user from session_id"""
         values = {'session_id': session_id}
         user = self._db.find_user_by(**values)
-        if session_id is None and user is None:
+        if session_id is None:
             return None
-        else:
+        if user:
             return user
+        else:
+            return None
