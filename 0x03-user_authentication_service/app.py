@@ -67,8 +67,8 @@ def profile():
 @app.route('/reset_password', methods=['POST'])
 def reset_token():
     """This route will add token to user"""
-    email = request.form.get('email')
     try:
+        email = request.form.get('email')
         token = AUTH.get_reset_password_token(email)
         return jsonify({"email": email, "reset_token": token}), 200
     except ValueError as e:
