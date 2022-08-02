@@ -46,5 +46,18 @@ class Auth:
             encrypt = password.encode('UTF-8')
             if bcrypt.checkpw(encrypt, user.hashed_password):
                 return True
+            else:
+                return False
+        else:
             return False
-        return False
+
+    def create_session(self, email: str) -> str:
+        session = self._db._session
+        user = session.query(User).filter_by(email=email).first()
+        if user:
+            session_id = _generate_uuid()
+            user.session_id = session_id
+            session.commit()
+            return session_id
+        else:
+            return None
