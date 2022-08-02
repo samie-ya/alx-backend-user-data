@@ -3,7 +3,7 @@
 import bcrypt
 from db import DB
 import uuid
-from typing import TypeVar
+from typing import TypeVar, Union
 from user import User
 
 
@@ -61,3 +61,13 @@ class Auth:
             return session_id
         else:
             return None
+
+    def get_user_from_session_id(self, session_id: str) ->\
+            Union[TypeVar('User'), None]:
+        """This function will retrieve a user from session_id"""
+        values = {'session_id': session_id}
+        user = self._db.find_user_by(**values)
+        if session_id is None and user is None:
+            return None
+        else:
+            return user
