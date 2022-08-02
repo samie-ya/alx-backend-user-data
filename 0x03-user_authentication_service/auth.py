@@ -66,12 +66,15 @@ class Auth:
             Union[TypeVar('User'), None]:
         """This function will retrieve a user from session_id"""
         values = {'session_id': session_id}
-        user = self._db.find_user_by(**values)
         if session_id is None:
             return None
-        if user:
-            return user
-        else:
+        try:
+            user = self._db.find_user_by(**values)
+            if user:
+                return user
+        except NoResultFound:
+            return None
+        except InvalidRequestError:
             return None
 
     def destroy_session(self, user_id: int) -> None:
