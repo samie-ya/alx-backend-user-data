@@ -35,8 +35,9 @@ class DB:
     def add_user(self, email: str, hashed_password: str) -> TypeVar('User'):
         """This function will add user to database"""
         new_user = User(email=email, hashed_password=hashed_password)
-        self._session.add(new_user)
-        self._session.commit()
+        session = self._session
+        session.add(new_user)
+        session.commit()
         return new_user
 
     def find_user_by(self, **kwargs: dict) -> TypeVar('User'):
@@ -52,3 +53,4 @@ class DB:
         for key, value in kwargs.items():
             setattr(user, key, value)
         self._session.commit()
+        return user
