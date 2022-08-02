@@ -45,6 +45,5 @@ class Auth:
             return False
         return False
 
-    @property
-    def _generate_uuid(self) -> str:
+    def _generate_uuid() -> str:
         return str(uuid.uuid4())
