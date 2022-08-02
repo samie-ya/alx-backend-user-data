@@ -88,8 +88,19 @@ class Auth:
         values = {'email': email}
         user = self._db.find_user_by(**values)
         if user:
-            token = str(uuid.uuid4())
+            token = _generate_uuid()
             self._db.update_user(user.id, reset_token=token)
             return token
+        else:
+            raise ValueError
+
+    def update_password(self, reset_token: str, password: str) -> None:
+        """This function will update password"""
+        values = {'reset_token': reset_token}
+        user = self._db.find_user_by(**values)
+        if user:
+            hashed = _hash_password(password)
+            self._db.update_user(user.id, hashed_password=hashed)
+            self._db.update_user(user.id, reset_token=None)
         else:
             raise ValueError
