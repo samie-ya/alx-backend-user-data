@@ -86,10 +86,10 @@ class Auth:
     def get_reset_password_token(self, email: str) -> str:
         """This function will create a token for user"""
         values = {'email': email}
-        try:
-            user = self._db.find_user_by(**values)
+        user = self._db.find_user_by(**values)
+        if user:
             token = str(uuid.uuid4())
             self._db.update_user(user.id, reset_token=token)
             return token
-        except ValueError as e:
-            pass
+        else:
+            raise ValueError
