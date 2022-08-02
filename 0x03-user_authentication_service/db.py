@@ -49,9 +49,6 @@ class DB:
     def update_user(self, user_id: int, **kwargs: dict) -> None:
         """This function will update a given user_id"""
         user = self.find_user_by(id=user_id)
-        try:
-            for key, value in kwargs.items():
-                setattr(user, key, value)
-            self._session.commit()
-        except:
-            raise ValueError
+        for key, value in kwargs.items():
+            setattr(user, key, value)
+        self._session.commit()
