@@ -2,6 +2,7 @@
 """This function will create a byte from str"""
 import bcrypt
 from db import DB
+import uuid
 from typing import TypeVar
 from user import User
 
@@ -43,3 +44,7 @@ class Auth:
                 return True
             return False
         return False
+
+    @property
+    def _generate_uuid(self) -> str:
+        return str(uuid.uuid4())
