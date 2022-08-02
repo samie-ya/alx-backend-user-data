@@ -36,3 +36,10 @@ class DB:
         self._session.add(new_user)
         self._session.commit()
         return new_user
+
+    def find_user_by(self, **kwargs: dict) -> TypeVar('User'):
+        """This function will use the keyword to query table user"""
+        user = self._session.query(User).filter_by(**kwargs).first()
+        if user:
+            return user
+        raise NoResultFound
