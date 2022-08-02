@@ -4,7 +4,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.session import Session
 from typing import TypeVar
@@ -35,10 +35,10 @@ class DB:
     def add_user(self, email: str, hashed_password: str) -> TypeVar('User'):
         """This function will add user to database"""
         new_user = User(email=email, hashed_password=hashed_password)
-        session = self._session
-        session.add(new_user)
-        session.commit()
+        self._session.add(new_user)
+        self._session.commit()
         return new_user
+        self._session.close()
 
     def find_user_by(self, **kwargs: dict) -> TypeVar('User'):
         """This function will use the keyword to query table user"""
