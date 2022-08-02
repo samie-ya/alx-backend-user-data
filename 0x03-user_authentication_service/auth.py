@@ -2,9 +2,11 @@
 """This function will create a byte from str"""
 import bcrypt
 from db import DB
-import uuid
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
 from typing import TypeVar, Union
 from user import User
+import uuid
 
 
 def _hash_password(password: str) -> bytes:
