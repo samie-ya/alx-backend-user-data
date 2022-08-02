@@ -39,6 +39,6 @@ class Auth:
         user = session.query(User).filter_by(email=email).first()
         if user:
             encrypt = password.encode('UTF-8')
-            if bcrypt.checkpw(encrypt, user.password):
+            if bcrypt.checkpw(encrypt, user.hashed_password):
                 return True
-            return False
+        return False
