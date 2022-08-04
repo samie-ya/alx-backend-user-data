@@ -87,11 +87,13 @@ class Auth:
         """This function will create a token for user"""
         values = {'email': email}
         user = self._db.find_user_by(**values)
-        if user:
-            token = _generate_uuid()
-            self._db.update_user(user.id, reset_token=token)
-            return token
-        else:
+        try:
+            user = self._db.find_user_by(**values)
+            if user:
+                token = _generate_uuid()
+                self._db.update_user(user.id, reset_token=token)
+                return token
+        except NoResultFound:
             raise ValueError
 
     def update_password(self, reset_token: str, password: str) -> None:
