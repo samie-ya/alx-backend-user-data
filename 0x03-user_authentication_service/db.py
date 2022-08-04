@@ -32,13 +32,12 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email: str, hashed_password: str) -> TypeVar('User'):
+    def add_user(self, email, hashed_password):
         """This function will add user to database"""
         new_user = User(email=email, hashed_password=hashed_password)
         self._session.add(new_user)
         self._session.commit()
         return new_user
-        self._session.close()
 
     def find_user_by(self, **kwargs: dict) -> TypeVar('User'):
         """This function will use the keyword to query table user"""
@@ -53,4 +52,3 @@ class DB:
         for key, value in kwargs.items():
             setattr(user, key, value)
         self._session.commit()
-        return user
