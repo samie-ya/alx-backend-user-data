@@ -100,10 +100,13 @@ class Auth:
     def update_password(self, reset_token: str, password: str) -> None:
         """This function will update password"""
         values = {'reset_token': reset_token}
-        user = self._db.find_user_by(**values)
-        if user:
-            hashed = _hash_password(password)
-            self._db.update_user(user.id, hashed_password=hashed)
-            self._db.update_user(user.id, reset_token=None)
-        else:
+        try:
+            user = self._db.find_user_by(**values)
+            if user:
+                hashed = _hash_password(password)
+                value = {'hashed_password': hashed, 'reset_token': None}
+                self._db.update_user(user.id, **value)
+        except NoResultFound:
+            raise ValueError
+        except InvalidRequestError:
             raise ValueError
