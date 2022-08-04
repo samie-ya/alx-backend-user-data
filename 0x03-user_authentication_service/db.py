@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
-"""DB module
-"""
+"""This is the DB module"""
 from sqlalchemy import create_engine
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from sqlalchemy.orm.exc import NoResultFound
 from typing import TypeVar
 from user import Base, User
 
 
 class DB:
-    """DB class
-    """
+    """This creates the DB class"""
 
     def __init__(self):
         """Initialize a new DB instance
@@ -34,7 +32,9 @@ class DB:
 
     def add_user(self, email: str, hashed_password: str) -> TypeVar('User'):
         """This function will add user to database"""
-        new_user = User(email=email, hashed_password=hashed_password)
+        new_user = User()
+        new_user.email = email
+        new_user.hashed_password = hashed_password
         self._session.add(new_user)
         self._session.commit()
         return new_user
