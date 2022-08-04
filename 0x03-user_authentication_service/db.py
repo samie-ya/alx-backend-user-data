@@ -46,9 +46,15 @@ class DB:
         raise NoResultFound
         raise InvalidRequestError
 
-    def update_user(self, user_id: int, **kwargs: dict) -> None:
+    def update_user(self, user_id: int, **kwargs) -> None:
         """This function will update a given user_id"""
-        user = self.find_user_by(id=user_id)
-        for key, value in kwargs.items():
-            setattr(user, key, value)
-        self._session.commit()
+        try:
+            user = self.find_user_by(id=user_id)
+            for key, value in kwargs.items():
+                if setattr(user, key, value) is not None:
+                    raise ValueError
+            self._session.commit()
+        except NoResultFound:
+            pass
+        except InvalidRequestError:
+            pass
