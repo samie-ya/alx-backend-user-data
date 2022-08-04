@@ -30,14 +30,12 @@ class Auth:
     def register_user(self, email: str, password: str) -> TypeVar('User'):
         """This function will register a user"""
         session = self._db._session
-        user = session.query(User).filter_by(email=email).first()
+        user = self._db.find_user_by(email=email)
         if user:
             raise ValueError('User {} already exists'.format(email))
         else:
-            hashed = _hash_password(password)
-            new_user = User(email=email, hashed_password=hashed)
-            session.add(new_user)
-            session.commit()
+            hashed_password = _hash_password(password)
+            new_user = self._db.add_user(email, hashed_password)
             return new_user
 
     def valid_login(self, email: str, password: str) -> bool:
