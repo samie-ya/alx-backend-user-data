@@ -33,24 +33,24 @@ class Auth:
             user = self._db.find_user_by(email=email)
             if user:
                 raise ValueError('User {} already exists'.format(email))
-        except NoResultFound:
+        except NoResultFound as err:
             hashed_password = _hash_password(password)
             new_user = self._db.add_user(email, hashed_password)
-            return new_user 
-        except InvalidRequestError:
-            pass
+            return new_user
 
     def valid_login(self, email: str, password: str) -> bool:
         """This function will validate a user"""
-        session = self._db._session
-        user = session.query(User).filter_by(email=email).first()
-        if user:
-            encrypt = password.encode('UTF-8')
-            if bcrypt.checkpw(encrypt, user.hashed_password):
-                return True
-            else:
-                return False
-        else:
+        try:
+            user = self._db.find_user_by(email=email)
+            if user:
+                encrypt = password.encode('UTF-8')
+                if bcrypt.checkpw(encrypt, user.hashed_password):
+                    return True
+                else:
+                    return False 
+        except NoResultFound:
+            return False
+        except InvalidRequestError:
             return False
 
     def create_session(self, email: str) -> str:
