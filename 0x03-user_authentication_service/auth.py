@@ -86,7 +86,6 @@ class Auth:
     def get_reset_password_token(self, email: str) -> str:
         """This function will create a token for user"""
         values = {'email': email}
-        user = self._db.find_user_by(**values)
         try:
             user = self._db.find_user_by(**values)
             if user:
@@ -94,6 +93,8 @@ class Auth:
                 self._db.update_user(user.id, reset_token=token)
                 return token
         except NoResultFound:
+            raise ValueError
+        except InvalidRequestError:
             raise ValueError
 
     def update_password(self, reset_token: str, password: str) -> None:
