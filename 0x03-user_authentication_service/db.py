@@ -50,10 +50,11 @@ class DB:
         try:
             user = self.find_user_by(id=user_id)
             for key, value in kwargs.items():
-                if setattr(user, key, value) is not None:
-                    raise ValueError
-                else:
+                if hasattr(user, key):
+                    setattr(user, key, value)
                     self._session.commit()
+                else:
+                    raise ValueError
         except NoResultFound:
             pass
         except InvalidRequestError:
