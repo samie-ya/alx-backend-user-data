@@ -27,10 +27,10 @@ class Auth:
     def __init__(self):
         self._db = DB()
 
-    def register_user(self, email: str, password: str) -> TypeVar('User'):
+    def register_user(self, email: str, password: str) -> User:
         """This function will register a user"""
         session = self._db._session
-        user = self._db.find_user_by(email=email)
+        user = session.query(User).filter_by(email=email).first()
         if user:
             raise ValueError('User {} already exists'.format(email))
         else:
