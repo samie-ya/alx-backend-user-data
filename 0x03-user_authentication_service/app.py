@@ -48,7 +48,7 @@ def logout():
     user = AUTH.get_user_from_session_id(cookie_value)
     if user:
         AUTH.destroy_session(user.id)
-        return redirect(url_for('basic'))
+        return redirect('http://0.0.0.0:5000/')
     else:
         abort(403)
 
