@@ -17,6 +17,7 @@ def _hash_password(password: str) -> bytes:
 
 
 def _generate_uuid() -> str:
+    """This function will generate a uuid"""
     return str(uuid.uuid4())
 
 
@@ -54,6 +55,7 @@ class Auth:
             return False
 
     def create_session(self, email: str) -> str:
+        """This function will create a session for user"""
         session = self._db._session
         user = session.query(User).filter_by(email=email).first()
         if user:
