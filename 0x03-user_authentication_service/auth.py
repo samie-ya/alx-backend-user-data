@@ -56,18 +56,19 @@ class Auth:
 
     def create_session(self, email: str) -> str:
         """This function will create a session for user"""
-        session = self._db._session
-        user = session.query(User).filter_by(email=email).first()
-        if user:
-            session_id = _generate_uuid()
-            user.session_id = session_id
-            session.commit()
-            return session_id
-        else:
+        values = {'email': email}
+        try:
+            user = self._db.find_user_by(**values)
+            if user:
+                session_id = _generate_uuid()
+                self._db.update_user(user_id, session_id=session_id)
+                return session_id
+        except NoResultFound:
+            return None
+        except InvalidRequestError:
             return None
 
-    def get_user_from_session_id(self, session_id: str) ->\
-            Union[TypeVar('User'), None]:
+    def get_user_from_session_id(self, session_id: str) -> Union[User, None]:
         """This function will retrieve a user from session_id"""
         values = {'session_id': session_id}
         if session_id is None:
